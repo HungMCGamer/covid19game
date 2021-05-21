@@ -7,5 +7,6 @@ Licensed by MIT License!
 - Install git: https://gitforwindows.org/ for Windows
 - or Go to the Code tab and choose: Download as ZIP
 - Install Python (3.6 or higher)
+- https://python.org
 - Do: ```pip install -r requirement```
 - Do ```python3 main.py```
