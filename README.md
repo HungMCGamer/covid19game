@@ -11,6 +11,5 @@ Licensed by MIT License!
 - Do: ```pip install -r requirement```
 - Do ```python3 main.py```
 
-## For help Discord Server, join: 
-discord.gg/jointhisserver
-![discord](https://user-images.githubusercontent.com/72331969/119087515-78560800-ba31-11eb-9280-6a916022152b.png)
+## For help Discord Server, join: https://discord.gg/5MWcTaF7Zm
+![discord](https://user-images.githubusercontent.com/72331969/119087618-9d4a7b00-ba31-11eb-882f-467c860afff9.png)
