@@ -1,12 +1,9 @@
-import random
-import sys
+import random, sys, time, os
 import tkinter as Tk
-from tkinter import Button, Frame, Label, LabelFrame, messagebox, PhotoImage, Tk, W, Entry
 import xlrd
-import time, os
-from random import seed
-from random import randint
-from random import shuffle
+from tkinter import Button, Frame, Label, LabelFrame, messagebox, PhotoImage, Tk, W, Entry
+from random import seed, randint, shuffle
+from termcolor import colored
 
 seed(1)
 
@@ -18,6 +15,9 @@ class Bq:
     wrong = ''
     choy = ''
     quest_frame = None
+    qcount_frame = None
+    logo_frame = None
+    logo_lbl = None
     ans_choices_frame = None
     your_rating = 0
     pc = 0
@@ -26,26 +26,27 @@ class Bq:
     index_question = 0
     tmp_count = 0
     #following vars  will eventually come from a config file.
-    window_title = 'Trờ chơi Phòng chống dịch Covid-19'
+    window_title = 'Trò chơi Phòng chống dịch Covid-19'
 
 # Set up main window.
 root = Tk()
 root.title(Bq.window_title)
 
 # Frame for logo display.
-logo_frame = LabelFrame(root)
-logo_frame.grid(row=0, column=0)
+Bq.logo_frame = LabelFrame(root)
+Bq.logo_frame.grid(row=0, column=0)
 
 # Load in and display logo image.
-logo_lbl = Label(logo_frame)
+Bq.logo_lbl = Label(Bq.logo_frame)
 PHOTO = PhotoImage(file=f'covid-logo.png')
-logo_lbl.config(image=PHOTO)
-logo_lbl.grid(row=0, column=0, padx=2, pady=2)
-logo_lbl.photo = PHOTO
+#PHOTO = PhotoImage(file=f'1_png.png')
+Bq.logo_lbl.config(image=PHOTO)
+Bq.logo_lbl.grid(row=0, column=0, padx=2, pady=2)
+Bq.logo_lbl.photo = PHOTO
 
 # Frame for question counter.
-qcount_frame = Frame(root)
-qcount_frame.grid()
+Bq.qcount_frame = Frame(root)
+Bq.qcount_frame.grid()
 
 # Frame for printing questions.
 Bq.quest_frame = Frame(root)
@@ -102,27 +103,9 @@ for i in range(sheet.nrows):
         ans_list.append(sheet.cell_value(i, 3))
         ans_list.append(sheet.cell_value(i, 4))
         ans_list.append(sheet.cell_value(i, 5))
-# For row 0 and column 0
 
 shuffle(index_list)
-#print(difficult_level)
-#print(ques_list[0])
-#print(index_list)
-
-
-# Load questions into a list called quest_list.
-#with open('questions.txt', 'r') as f:
-    # splitlines removes the newline esc char.
-#    ques_list = f.read().splitlines()
-#    print(ques_list)
-
-# Find out how many questions were loaded in.
-Bq.total_questions = (len(ques_list))
-
-# Load multiple choice answers into ans_list.
-#with open('answers.txt', 'r') as f:
-#    ans_list = f.read().splitlines()
-
+Bq.total_questions = (len(ques_list))           
 def get_rating():
     """Get percentage of questions answered correctly
         and link it to a game over message."""
@@ -149,7 +132,7 @@ def check_end_game():
     get_rating()
 
     if Bq.index_question == (20):
-        messagebox.showinfo(Bq.window_title, 'Trờ chơi kết thúc\n\n Kêt quả của ' + str(Bq.player_name)+ ' là '
+        messagebox.showinfo(Bq.window_title, 'Trò chơi kết thúc\n\n Kêt quả của ' + str(Bq.player_name)+ ' là '
                             +str(Bq.your_score)+ ' trên tổng số  '
                             +str(20)+'\n\n'
                             +str(Bq.your_rating))
@@ -168,7 +151,7 @@ def update_score():
 def correctly_answered():
     """Pop up msgbox if answered correctly."""
     messagebox.showinfo(Bq.window_title,
-                        str(Bq.answer)+' chính xác !\n\n'
+                        ' Câu trả lời: "' + str(Bq.answer) + ' " là câu trả lời chính xác !\n\n'
                         'Xin chúc mừng ' + str(Bq.player_name)+ ', bạn đã có thêm điểm.')
 
     Bq.tmp_count += 1 # Next question.
@@ -191,11 +174,37 @@ def wrong_answer():
 
 def display_quest_count():
     """Show question number."""
-
-    qcount_label = Label(qcount_frame, bg='skyblue', fg='white',
-                         font=('Arial', 14, 'bold'),
-                         text='Vòng ' + str(Bq.level_round_current + 1) +'/4: ' + 'câu hỏi số ' + str(Bq.index_question + 1)+'/20 ')
-                        
+    Bq.qcount_frame.destroy()
+    Bq.qcount_frame = Frame(root)
+    Bq.qcount_frame.grid(row=1, column=0, padx=5, pady=8)
+    txt = 'Vòng 1:' +' Đương Đầu: ' + 'câu hỏi số ' + str(Bq.index_question + 1)+'/20 '  
+    PHOTO = PhotoImage(file=f'1_png.png')
+    Bq.logo_lbl.config(image=PHOTO)
+    Bq.logo_lbl.grid(row=0, column=0, padx=2, pady=2)
+    Bq.logo_lbl.photo = PHOTO
+    if Bq.index_question >= 5:
+      txt = 'Vòng 2:' +' Bảo Vệ: ' + 'câu hỏi số ' + str(Bq.index_question + 1)+'/20 '
+      PHOTO = PhotoImage(file=f'2_png.png')
+      Bq.logo_lbl.config(image=PHOTO)
+      Bq.logo_lbl.grid(row=0, column=0, padx=2, pady=2)
+      Bq.logo_lbl.photo = PHOTO
+    if Bq.index_question >= 10:
+      txt = 'Vòng 3:' +' Quyết Đấu: ' + 'câu hỏi số ' + str(Bq.index_question + 1)+'/20 '
+      PHOTO = PhotoImage(file=f'3_png.png')
+      Bq.logo_lbl.config(image=PHOTO)
+      Bq.logo_lbl.grid(row=0, column=0, padx=2, pady=2)
+      Bq.logo_lbl.photo = PHOTO
+    if Bq.index_question >= 15:
+      txt = 'Vòng 4:' +' Vượt Qua Đại Dịch: ' + 'câu hỏi số ' + str(Bq.index_question + 1)+'/20 '
+      PHOTO = PhotoImage(file=f'4_png.png')
+      Bq.logo_lbl.config(image=PHOTO)
+      Bq.logo_lbl.grid(row=0, column=0, padx=2, pady=2)
+      Bq.logo_lbl.photo = PHOTO
+    
+    qcount_label = Label(Bq.qcount_frame, bg='skyblue', fg='white',
+                        font=('Arial', 14, 'bold'),
+                        text=txt)
+                      
     qcount_label.grid(row=1, column=0)
 
 
@@ -361,7 +370,7 @@ btn_d.grid(row=5, column=3, pady=15, padx=15)
 
 def Start_the_game(player_name_game):
   Bq.player_name = player_name_game
-  messagebox.showinfo(Bq.window_title,'Xin chào '   + str(Bq.player_name)  + ' tới Trờ chơi Phòng chống dịch Covid-19 !')
+  messagebox.showinfo(Bq.window_title,'Xin chào '   + str(Bq.player_name)  + ' tới Trò chơi Phòng chống dịch Covid-19 !')
   NameCheck01 = Bq.player_name
   while True:
     if NameCheck01 == '':
